@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   // ===== Scrollable Cards Animation =====
   const track = document.querySelector(".massages-wall-track");
   const container = document.querySelector(".massages-wall-cards");
@@ -96,53 +96,57 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initRightSlider(".weekly-activity-content-sliding-imgs");
   initRightSlider(".special-activity-content-sliding-img");
-// ===== Gallery Checkbox Filter with Special First Click =====
-const checkboxes = document.querySelectorAll('.gallery-page-head-btns input');
-const images = document.querySelectorAll('.gallery-page-main-content img');
 
-// 1. ניצור "דגל" שיעקוב אם זו הלחיצה הראשונה
-let isFirstClick = true;
+  
+  const buttons = document.querySelectorAll(".gallery-page-head-btns button");
+  const images = document.querySelectorAll(".gallery-page-main-content img");
 
-function updateGallery() {
-  // נבדוק אילו תיבות מסומנות
-  const checkedBoxes = Array.from(checkboxes).filter(cb => cb.checked);
+  const activeButtons = new Set();
+  const transitionTime = 400; // זמן fade במילישניות
 
-  // אם אף תיבה לא מסומנת, נציג את כל התמונות
-  if (checkedBoxes.length === 0) {
-    images.forEach(img => img.style.display = 'block');
-    return; // נסיים את ריצת הפונקציה כאן
-  }
-
-  // אם יש תיבות מסומנות, קודם כל נסתיר את כל התמונות
-  images.forEach(img => img.style.display = 'none');
-
-  // ואז נעבור על התיבות המסומנות ונציג את התמונות שלהן
-  checkedBoxes.forEach(cb => {
-    const imagesToShow = document.querySelectorAll(`.gallery-page-main-content img.${cb.id}`);
-    imagesToShow.forEach(img => img.style.display = 'block');
+  // אתחול
+  images.forEach(img => {
+    img.style.opacity = 1;
+    img.style.transition = `opacity ${transitionTime}ms ease`;
+    img.style.position = "relative";
   });
-}
 
-// 2. נוסיף את הלוגיקה החדשה לתוך ה-event listener
-checkboxes.forEach(cb => {
-  cb.addEventListener('change', () => {
-    // אם זו הלחיצה הראשונה, והמשתמש סימן תיבה (ולא ביטל סימון)
-    if (isFirstClick && cb.checked) {
-      // נעבור על כל שאר התיבות ונבטל את הסימון שלהן
-      checkboxes.forEach(otherCb => {
-        if (otherCb !== cb) {
-          otherCb.checked = false;
-        }
+  buttons.forEach(button => {
+    button.addEventListener("click", () => {
+      const targetClass = button.id;
+
+      // Toggle לחיצה
+      if (activeButtons.has(targetClass)) {
+        activeButtons.delete(targetClass);
+        button.style.backgroundColor = "";
+        button.style.color = "";
+      } else {
+        activeButtons.add(targetClass);
+        button.style.backgroundColor = "purple";
+        button.style.color = "white";
+      }
+
+      // קודם fade-out של כל התמונות
+      images.forEach(img => {
+        img.style.opacity = 0;
       });
-      // נשנה את הדגל כדי שהתנאי הזה לא יתקיים יותר
-      isFirstClick = false;
-    }
 
-    // 3. נקרא לפונקציית התצוגה שתמיד עובדת אותו הדבר
-    updateGallery();
+      // אחרי שה-fade-out מסתיים, עדכון הצגת התמונות החדשות עם fade-in
+      setTimeout(() => {
+        images.forEach(img => {
+          const matches = Array.from(activeButtons).some(cls => img.classList.contains(cls));
+          if (matches || activeButtons.size === 0) {
+            img.style.position = "relative";
+            img.style.pointerEvents = "auto";
+            img.style.opacity = 1;
+          } else {
+            img.style.position = "absolute";
+            img.style.pointerEvents = "none";
+            img.style.opacity = 0;
+          }
+        });
+      }, transitionTime);
+    });
   });
 });
 
-// קריאה ראשונית כדי להציג הכל בהתחלה
-updateGallery();
-});
