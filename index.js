@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
         button.style.color = "";
       } else {
         activeButtons.add(targetClass);
-        button.style.backgroundColor = "purple";
+        button.style.backgroundColor = "#FF6B6B";
         button.style.color = "white";
       }
 
