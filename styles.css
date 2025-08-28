@@ -1741,30 +1741,27 @@ a {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap;
+
     gap: 1em;
 }
 
-.gallery-page-head-btns input {
-    display: none;
-}
-
-.gallery-page-head-btns label {
-    cursor: pointer;
-    font-family: var(--h-font);
-    border: 1px solid var(--pink);
+.gallery-page-head-btns button{
+    background: none;
     padding: 0.5em 1em;
+    border: 1px solid var(--pink);
     border-radius: 2em;
     color: var(--pink);
-    transition: 0.3s;
     font-size: var(--fs-p);
+    transition: 0.3s;
+    cursor: pointer;
+   
 }
 
-
-.gallery-page-head-btns label:hover,
-.gallery-page-head-btns input:checked + label {
+.gallery-page-head-btns button:hover{
     background-color: var(--pink);
+    border: 1px solid var(--pink);
     color: white;
+    font-size: var(--fs-p);
 }
 
 .gallery-page-main-content {
@@ -1774,33 +1771,37 @@ a {
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 0.5em;
+    gap: 0.2em;
 }
 
 .gallery-page-main-content img {
     width: 12em;
     height: 18em;
-    border: 1px solid red;
+    border-radius: 5px;
     object-fit: cover;
- 
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+.gallery-page-main-content img.hidden {
+    opacity: 0;
+    pointer-events: none; /* תמנע קליקים על תמונות מוסתרות */
+    position: absolute; /* תמנע קפיצה של הדף */
 }
 
-@media (max-width:990px) {
 
-    .gallery-page-head-btns label{
-        font-size: 10px;
-    }
+@media (max-width:990px) {
     .gallery-page-head-btns{
+            flex-wrap: wrap;
         justify-content: center;
+        align-items: center;
         width: 100%;
     }
 
     .gallery-page-main-content img {
-        width: 6em;
-        height: 9em;
+        width: 8em;
+        height: 12em;
     }
     .gallery-page {
         padding: 4em 0.5em;
     }
-
 }
